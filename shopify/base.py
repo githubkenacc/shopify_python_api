@@ -72,6 +72,7 @@ class ShopifyResourceMeta(ResourceMeta):
     password = property(get_password, set_password, None, "The password for HTTP Basic Auth.")
 
     def get_site(cls):
+        print('site -> {}'.format(getattr(cls._threadlocal, "site", ShopifyResource._site)))
         return getattr(cls._threadlocal, "site", ShopifyResource._site)
 
     def set_site(cls, value):
@@ -147,6 +148,8 @@ class ShopifyResourceMeta(ResourceMeta):
     version = property(get_version, set_version, None, "Shopify Api Version")
 
     def get_url(cls):
+        output = getattr(cls._threadlocal, "url", ShopifyResource._url)
+        print(output)
         return getattr(cls._threadlocal, "url", ShopifyResource._url)
 
     def set_url(cls, value):
