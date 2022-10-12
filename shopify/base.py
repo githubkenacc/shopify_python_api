@@ -7,6 +7,7 @@ import threading
 import sys
 from six.moves import urllib
 import six
+import os
 
 from shopify.collection import PaginatedCollection
 from pyactiveresource.collection import Collection
@@ -72,7 +73,8 @@ class ShopifyResourceMeta(ResourceMeta):
     password = property(get_password, set_password, None, "The password for HTTP Basic Auth.")
 
     def get_site(cls):
-        print('site -> {}'.format(getattr(cls._threadlocal, "site", ShopifyResource._site)))
+        if os.environ.get('SHOPIFY_HOST_IPADDR'):
+            return os.environ.get('SHOPIFY_HOST_IPADDR')
         return getattr(cls._threadlocal, "site", ShopifyResource._site)
 
     def set_site(cls, value):
@@ -104,7 +106,10 @@ class ShopifyResourceMeta(ResourceMeta):
     def get_headers(cls):
         if not hasattr(cls._threadlocal, "headers"):
             cls._threadlocal.headers = ShopifyResource._headers.copy()
-        return cls._threadlocal.headers
+        headers = cls._threadlocal.headers
+        if os.environ.get('SHOPIFY_HOST_IPADDR'):
+            headers['SHOPIFY-DOMAIN'] = getattr(cls._threadlocal, "site", ShopifyResource._site)
+        return headers
 
     def set_headers(cls, value):
         cls._threadlocal.headers = value
