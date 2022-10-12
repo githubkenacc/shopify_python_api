@@ -21,6 +21,10 @@ class GraphQL:
         headers = self.merge_headers(default_headers, self.headers)
         data = {"query": query, "variables": variables, "operationName": operation_name}
 
+        print('request endpoint -> {}'.format(self.endpoint))
+        print('request data -> {}'.format(json.dumps(data).encode("utf-8")))
+        print('request headers -> {}'.format(headers))
+
         req = urllib.request.Request(self.endpoint, json.dumps(data).encode("utf-8"), headers)
 
         try:
