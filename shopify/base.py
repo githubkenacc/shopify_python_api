@@ -73,8 +73,8 @@ class ShopifyResourceMeta(ResourceMeta):
     password = property(get_password, set_password, None, "The password for HTTP Basic Auth.")
 
     def get_site(cls):
-        if os.environ.get('SHOPIFY_HOST_IPADDR'):
-            return os.environ.get('SHOPIFY_HOST_IPADDR')
+        if os.environ.get('SHOPIFY_HOST'):
+            return os.environ.get('SHOPIFY_HOST')
         return getattr(cls._threadlocal, "site", ShopifyResource._site)
 
     def set_site(cls, value):
@@ -107,7 +107,7 @@ class ShopifyResourceMeta(ResourceMeta):
         if not hasattr(cls._threadlocal, "headers"):
             cls._threadlocal.headers = ShopifyResource._headers.copy()
         headers = cls._threadlocal.headers
-        if os.environ.get('SHOPIFY_HOST_IPADDR'):
+        if os.environ.get('SHOPIFY_HOST'):
             headers['SHOPIFY-DOMAIN'] = getattr(cls._threadlocal, "site", ShopifyResource._site)
         return headers
 
